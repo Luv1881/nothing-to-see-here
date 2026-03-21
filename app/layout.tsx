@@ -1,0 +1,59 @@
+import type { Metadata } from "next";
+import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { Nav } from "../components/nav";
+import { Footer } from "../components/footer";
+import { Terminal } from "../components/terminal";
+import "./globals.css";
+
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://example.com"),
+  title: "Luv | Software Engineer",
+  description:
+    "Software Engineer exploring systems, security, and automation.",
+  openGraph: {
+    title: "Luv | Software Engineer",
+    description:
+      "Software Engineer exploring systems, security, and automation.",
+    url: "https://example.com",
+    siteName: "Luv",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className="dark scroll-smooth">
+      <body
+        className={`${ibmPlexSans.variable} ${jetbrainsMono.variable} antialiased min-h-screen bg-background text-foreground`}
+      >
+        <div className="min-h-screen flex flex-col">
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <Terminal />
+      </body>
+    </html>
+  );
+}

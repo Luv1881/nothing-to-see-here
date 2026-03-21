@@ -1,0 +1,134 @@
+---
+title: "The Case for Minimal Infrastructure"
+date: "2026-03-10"
+preview: "Complexity is an implicit tax on every engineering decision. Why less is usually more when designing and maintaining cloud systems."
+tags: ["infrastructure", "philosophy"]
+---
+
+Complexity is the quiet killer of great software projects. It rarely arrives all at once; instead, it creeps in through a thousand "useful" abstractions, well-intentioned tools, and sprawling architectures.
+
+When we talk about minimal infrastructure, we aren't talking about intentionally limiting what a system can do. We are talking about **maximizing clarity** — the ability for any engineer on the team to open the system, understand what is happening, and make changes with confidence.
+
+> The cheapest, fastest, and most reliable components of a computer system are those that aren't there. — Gordon Bell
+
+## The Cost of Abstraction
+
+Every layer of abstraction you add to a project is a layer you have to understand, debug, and eventually secure. Consider a simple health check endpoint. Here is what it looks like when you strip away the frameworks:
+
+```rust
+use std::net::TcpListener;
+use std::io::Write;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
+    println!("Health check listening on :8080");
+
+    for stream in listener.incoming() {
+        if let Ok(mut stream) = stream {
+            let response = "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nok";
+            stream.write_all(response.as_bytes()).ok();
+        }
+    }
+}
+```
+
+Compare that to the typical approach: a Docker container running a Node.js Express server with 200MB of `node_modules`, behind an Nginx reverse proxy, deployed through a Helm chart onto a Kubernetes cluster. For a health check.
+
+Often, a simple binary running on a single robust virtual machine with a basic queue can handle what developers mistakenly reach out to Kubernetes to solve.
+
+## The Complexity Tax
+
+Every architectural decision carries an implicit tax. Here is a rough model:
+
+| Decision | Upfront Cost | Ongoing Tax | Failure Surface |
+|----------|-------------|-------------|-----------------|
+| Single binary on a VM | Low | Minimal | Small |
+| Containerized microservices | Medium | High | Large |
+| Kubernetes + service mesh | High | Very High | Enormous |
+| Serverless functions | Low | Medium | Distributed |
+
+The ongoing tax is what kills you. It shows up as:
+
+- Engineers spending 30% of their time on infrastructure instead of product
+- Debugging sessions that require understanding 5 systems instead of 1
+- Security audits that take weeks because the attack surface is enormous
+- On-call rotations that burn out your best people
+
+### Designing for Tomorrow
+
+Here are a few principles I keep coming back to:
+
+1. **Defer decisions** until they are necessary. You do not need a message queue on day one. You probably do not need one on day one hundred.
+2. **Remove code** as eagerly as you add it. Every line of code is a liability. Dead code is a trap for the next developer.
+3. **If you can't draw it on a whiteboard**, it is too complex. Systems should be explainable in a single conversation.
+
+There is a common counterargument: *"But what about scale?"* The answer is almost always the same — **you are not at that scale yet**, and when you are, the problem will look different than you imagine today.
+
+## A Practical Example
+
+Let's say you need to process background jobs. Here is the minimal approach in Go:
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+type Job struct {
+    ID      int
+    Payload string
+}
+
+func worker(id int, jobs <-chan Job, wg *sync.WaitGroup) {
+    defer wg.Done()
+    for job := range jobs {
+        fmt.Printf("worker %d processing job %d: %s\n", id, job.ID, job.Payload)
+    }
+}
+
+func main() {
+    jobs := make(chan Job, 100)
+    var wg sync.WaitGroup
+
+    for i := 1; i <= 3; i++ {
+        wg.Add(1)
+        go worker(i, jobs, &wg)
+    }
+
+    for i := 1; i <= 20; i++ {
+        jobs <- Job{ID: i, Payload: fmt.Sprintf("task-%d", i)}
+    }
+    close(jobs)
+    wg.Wait()
+}
+```
+
+No Redis. No RabbitMQ. No Celery. Just goroutines and a channel. This handles tens of thousands of jobs per second on a single machine. When — and only when — you outgrow it, you add the distributed layer.
+
+## The Security Argument
+
+Minimal infrastructure is also a **security posture**. Every service, dependency, and network hop is an attack surface. Consider the difference:
+
+- **Minimal**: 1 binary, 1 port, 1 set of credentials, 1 attack surface
+- **Complex**: 12 services, 30 ports, 50 environment variables, 200 dependencies
+
+The second system is not just harder to build and maintain. It is exponentially harder to secure. Every dependency is a potential CVE. Every service boundary is a potential misconfiguration. Every credential is a potential leak.
+
+---
+
+## Closing Thoughts
+
+The best infrastructure I have worked with had a few things in common:
+
+- Any engineer could understand the entire system in an afternoon
+- Deployments were boring and predictable
+- The on-call rotation was quiet
+- The cloud bill was reasonable
+
+None of these systems used the latest orchestration tools. They were **deliberately simple**, built by teams that understood that the goal of infrastructure is to disappear — to be so reliable and understandable that you forget it exists.
+
+A system is secure and observable when the engineers actually understand how the traffic flows through it.
+
+**Keep it simple. Ship it. Move on.**
