@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import { IBM_Plex_Sans, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import { Nav } from "../components/nav";
 import { Footer } from "../components/footer";
 import { Terminal } from "../components/terminal";
@@ -15,6 +15,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body
-        className={`${ibmPlexSans.variable} ${jetbrainsMono.variable} antialiased min-h-screen bg-background text-foreground`}
+        className={`${ibmPlexSans.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased min-h-screen bg-background text-foreground`}
       >
         <div className="min-h-screen flex flex-col">
           <Nav />

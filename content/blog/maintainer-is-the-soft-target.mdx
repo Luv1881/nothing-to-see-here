@@ -1,0 +1,72 @@
+---
+title: "The Maintainer Is the Soft Target"
+date: "2026-05-01"
+preview: "Six supply chain attacks in three months. None of them broke the code. They all broke the human with publish rights — or the OAuth token nearby."
+tags: ["security", "supply-chain"]
+---
+
+On March 31, the Axios maintainer accepted a Microsoft Teams call from a "company founder." The pretext was a quick chat. The follow-up was a small installer to fix an "out-of-date issue." Three hours later, `axios@1.14.1` and `axios@0.30.4` hit npm carrying a fake dependency called `plain-crypto-js@4.2.1` that pulled a cross-platform RAT onto every machine that ran `npm install` during the window.
+
+Axios does 100 million downloads a week. Huntress watched at least 135 endpoints phone home before the package was yanked.
+
+That story repeats. Here is the last few months of supply chain incidents:
+
+**Feb–Apr — Vercel (npm/cloud, millions of deployments affected)**
+Context.ai developer machine, Lumma Stealer infection. Stole Google Workspace OAuth tokens. Attacker pivoted into Vercel's internal systems and accessed customer environment variables. Your `.env.production` sitting on Vercel's servers: read. Your secrets: not so secret anymore.
+
+**Mar 23 — Checkmarx (Open VSX, GitHub Actions)**
+Maintainer credentials compromised. Two ecosystems, one human.
+
+**Mar 26 — LiteLLM (PyPI, ~3.4M downloads/day)**
+Maintainer credentials. The package your AI stack probably depends on, quietly backdoored.
+
+**Mar 31 — Axios (npm, 100M downloads/week)**
+Teams call from a "company founder." Small installer to fix an "out-of-date issue." Three hours later, a cross-platform RAT was hitching rides on every `npm install`.
+
+**Apr 22 — Bitwarden CLI (npm)**
+Publish flow compromise. The password manager CLI. The irony writes itself.
+
+**Apr 29 — SAP npm ("Mini Shai-Hulud")**
+Maintainer credentials again. Named after a sandworm, presumably because it devoured everything in its path.
+
+Six compromises. Six different ecosystems. Same shape every time.
+
+## The actual exploit is a person
+
+The industry spent three years writing about SBOMs, sigstore, provenance, and reproducible builds. Useful work. None of it would have caught any of these.
+
+The attack flow, generalized:
+
+1. Identify a maintainer with publish rights to a popular package.
+2. Approach them with a plausible business pretext — an offer, a bug report, a "quick call."
+3. Get an installer onto their laptop.
+4. Lift the npm / PyPI / GitHub token from disk.
+5. Push a malicious version through the legitimate, signed, provenance-checked release flow.
+
+The cryptography all worked. The package *was* signed by the maintainer. The provenance attestation *was* valid. Everything downstream did exactly what it was designed to do.
+
+> The soft target is no longer the registry. It is the person with 2FA on their phone and a token in `~/.npmrc`.
+
+## The dev laptop is a credential warehouse
+
+Once the attacker is on the maintainer's machine, the prize isn't the source code. It's the tokens. A modern dev box holds `~/.npmrc`, `~/.aws/credentials`, `~/.kube/config`, every git PAT, every OAuth refresh token the OS keychain has ever seen, and — as of April 29 — `.claude/settings.json` and `.vscode/tasks.json`.
+
+The Vercel incident adds a layer: you don't even need to be the maintainer. One infected dev at a vendor company, one stolen Google OAuth token, and suddenly the attacker is browsing Vercel's internal tooling. Customer environment variables — all those `DATABASE_URL` and `STRIPE_SECRET_KEY` values you trusted to a cloud platform — become loot. The blast radius of a single credential has never been wider.
+
+The Mini Shai-Hulud campaign was the first to weaponize AI agent configs for persistence. A well-placed hook in a coding agent means your *next* `claude` or `cursor` session is the one that quietly exfiltrates the next batch of secrets. Your AI assistant, helpfully assisting somebody else.
+
+## What actually helps
+
+The boring part, but it is the part that matters:
+
+1. **No long-lived publish tokens on laptops.** Publish from CI with OIDC, hardware key on the human side. The maintainer should not technically *be able to* push a release from `~`.
+2. **Audit `postinstall` scripts.** Most 2026 payloads ran from `postinstall`. Set `npm config set ignore-scripts true` in CI and accept the small inconvenience.
+3. **Quarantine new minor versions.** Renovate + a 48-hour wait catches most of these — the malicious window is usually under three hours.
+
+## Closing thought
+
+The attackers in 2026 stopped trying to break cryptography and started reading LinkedIn — or just waiting for a Lumma Stealer campaign to do the credential lifting for them. They look up whoever maintains a package you depend on, send them a calendar invite, and walk in through the front door of the build system everyone has agreed to trust.
+
+The fix isn't another framework. It's fewer humans with publish rights, shorter-lived credentials, and a healthy paranoia about scheduled Teams calls from people who really, really love your work.
+
+**Trust your dependencies. Verify your maintainers.**

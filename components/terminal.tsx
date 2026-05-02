@@ -18,9 +18,30 @@ const COMMANDS: Record<
   blog: { description: "open writing page", action: "navigate", target: "/writing" },
   contact: { description: "get in touch", action: "navigate", target: "/contact" },
   now: { description: "what I'm up to", action: "navigate", target: "/now" },
-  resume: { description: "download resume", action: "text", target: "Resume not uploaded yet." },
-  github: { description: "open GitHub", action: "open", target: "https://github.com/luv" },
+  resume: { description: "download resume", action: "text", target: "resume not uploaded yet. persistence is a virtue." },
+  github: { description: "open github profile", action: "open", target: "https://github.com/Luv1881" },
+  whoami: {
+    description: "who am I?",
+    action: "text",
+    target:
+      "luv gupta. software engineer. builds systems that run quietly and break loudly — preferably only in staging. interested in security, automation, and the occasional existential question about why the build passed locally.",
+  },
+  coffee: { description: "you've earned it", action: "text", target: "coffee" },
 };
+
+function CoffeeOutput() {
+  return (
+    <div className="text-muted/60 mt-1 mb-2">
+      <pre className="text-xs leading-tight font-mono">{`    ( (
+     ) )
+  ._______.
+  |       |]
+  \\       /
+   \`-----'`}</pre>
+      <p className="mt-2">you&apos;ve earned it. ☕</p>
+    </div>
+  );
+}
 
 export function Terminal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +93,25 @@ export function Terminal() {
         return;
       }
 
+      if (trimmed === "sudo hire-me") {
+        setHistory((prev) => [
+          ...prev,
+          {
+            command: cmd,
+            output: (
+              <span className="text-red-400/70">
+                permission denied — but the{" "}
+                <a href="/contact" className="text-accent/70 hover:text-accent underline">
+                  /contact
+                </a>{" "}
+                page has no sudo requirements.
+              </span>
+            ),
+          },
+        ]);
+        return;
+      }
+
       let output: React.ReactNode = "";
 
       if (trimmed === "help") {
@@ -79,16 +119,20 @@ export function Terminal() {
           <div className="flex flex-col gap-0.5 mt-1 mb-3 text-muted/70">
             {Object.entries(COMMANDS).map(([name, { description }]) => (
               <div key={name} className="flex gap-4">
-                <span className="text-accent/80 w-24">{name}</span>
+                <span className="text-accent/80 w-28">{name}</span>
                 <span>{description}</span>
               </div>
             ))}
             <div className="flex gap-4">
-              <span className="text-accent/80 w-24">clear</span>
+              <span className="text-accent/80 w-28">sudo hire-me</span>
+              <span>trust me on this one</span>
+            </div>
+            <div className="flex gap-4">
+              <span className="text-accent/80 w-28">clear</span>
               <span>clear terminal</span>
             </div>
             <div className="flex gap-4">
-              <span className="text-accent/80 w-24">help</span>
+              <span className="text-accent/80 w-28">help</span>
               <span>show this message</span>
             </div>
           </div>
@@ -97,25 +141,22 @@ export function Terminal() {
         const command = COMMANDS[trimmed];
         if (command.action === "navigate") {
           output = (
-            <span className="text-muted/50">
-              navigating to {command.target}...
-            </span>
+            <span className="text-muted/50">navigating to {command.target}...</span>
           );
           router.push(command.target);
           setTimeout(() => setIsOpen(false), 400);
         } else if (command.action === "open") {
-          output = (
-            <span className="text-muted/50">opening...</span>
-          );
+          output = <span className="text-muted/50">opening...</span>;
           window.open(command.target, "_blank");
+        } else if (trimmed === "coffee") {
+          output = <CoffeeOutput />;
         } else {
           output = <span className="text-muted/50">{command.target}</span>;
         }
       } else {
         output = (
           <span className="text-red-400/70">
-            command not found: {trimmed}. type &apos;help&apos; for available
-            commands.
+            command not found: {trimmed}. type &apos;help&apos; for available commands.
           </span>
         );
       }
@@ -136,7 +177,7 @@ export function Terminal() {
         className="w-full max-w-xl bg-[#0a0a0b] border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden font-mono text-[13px] flex flex-col max-h-[65vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center px-4 py-3 border-b border-border bg-surface/50">
+        <div className="flex items-center px-4 py-3 border-b border-border/60 bg-surface/50">
           <div className="flex space-x-2">
             <button
               onClick={() => setIsOpen(false)}

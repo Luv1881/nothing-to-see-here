@@ -25,7 +25,7 @@ export function Nav() {
       className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/30"
       aria-label="Main navigation"
     >
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+      <div className="w-full px-6 sm:px-8 md:px-14 lg:px-20 xl:px-28 2xl:max-w-[1800px] 2xl:mx-auto">
         <div className="flex items-center justify-between h-14">
           <Link
             href="/"
@@ -59,7 +59,7 @@ export function Nav() {
                   className={`relative transition-colors duration-200 ${
                     active
                       ? "text-foreground"
-                      : "text-muted/50 hover:text-foreground"
+                      : "text-muted/75 hover:text-foreground"
                   }`}
                 >
                   {name}
@@ -105,7 +105,7 @@ export function Nav() {
                   className={`transition-colors duration-200 py-1 ${
                     active
                       ? "text-foreground"
-                      : "text-muted/60 hover:text-foreground"
+                      : "text-muted/80 hover:text-foreground"
                   }`}
                 >
                   {name}

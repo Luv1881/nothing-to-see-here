@@ -1,62 +1,83 @@
 import { FadeIn } from "@/components/fade-in";
+import { PageTitle } from "@/components/page-title";
+import { PageShell } from "@/components/page-shell";
+import { CopyButton } from "@/components/copy-button";
 
 export const metadata = {
   title: "Contact | Luv",
   description: "How to reach me.",
 };
 
-const links = [
-  { name: "Email", url: "mailto:hello@example.com", label: "hello@example.com" },
-  { name: "GitHub", url: "https://github.com/luv", label: "github.com/luv" },
-  { name: "LinkedIn", url: "https://linkedin.com/in/luv", label: "linkedin.com/in/luv" },
-  { name: "Twitter", url: "https://twitter.com/luv", label: "twitter.com/luv" },
+const EMAIL = "chatgptvandl@gmail.com";
+
+const socials = [
+  {
+    name: "GitHub",
+    url: "https://github.com/Luv1881",
+    label: "github.com/Luv1881",
+  },
+  {
+    name: "LinkedIn",
+    url: "https://linkedin.com/in/luv-gupta-b73491261",
+    label: "linkedin.com/in/luv-gupta",
+  },
 ];
 
 export default function Contact() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-20 md:py-32">
+    <PageShell>
       <FadeIn>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-x-12">
           <div className="lg:col-span-4">
-            <p className="font-mono text-[12px] text-muted/60 tracking-[0.2em] uppercase mb-4">
-              Contact
-            </p>
-            <h1 className="text-4xl md:text-5xl font-light tracking-[-0.035em] leading-tight mb-6">
-              Get in touch.
-            </h1>
-            <p className="text-muted font-normal leading-[1.8] max-w-[36ch]">
-              I am always open to discussing systems, security, or interesting
-              engineering problems.
+            <PageTitle eyebrow="Contact">Get in touch.</PageTitle>
+            <p className="text-muted font-normal leading-[1.8] measure -mt-8">
+              Open to discussing systems, security, interesting engineering
+              problems, or just about anything that runs at sub-millisecond
+              latency.
             </p>
           </div>
 
-          <div className="lg:col-span-6 lg:col-start-7">
-            <div className="flex flex-col">
-              {links.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-between py-5 border-b border-border/30 first:border-t first:border-border/30 transition-colors duration-300"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
-                    <span className="font-mono text-[12px] text-muted/60 tracking-wider uppercase w-20">
-                      {link.name}
-                    </span>
-                    <span className="text-muted font-normal group-hover:text-foreground transition-colors duration-300">
-                      {link.label}
-                    </span>
-                  </div>
-                  <span className="text-muted/20 group-hover:text-accent group-hover:translate-x-0.5 transition-all duration-300 text-sm">
-                    &rarr;
+          <div className="lg:col-span-5 lg:col-start-7">
+            <dl className="border-t border-border/40">
+              <div className="group flex items-baseline justify-between py-6 border-b border-border/40">
+                <dt className="font-mono text-[12px] text-muted/75 tracking-wider uppercase w-24 shrink-0">
+                  Email
+                </dt>
+                <dd className="font-mono text-[13px] text-muted/90 flex items-center">
+                  <span>
+                    {EMAIL.replace("@", " [at] ").replace(".", " [dot] ")}
                   </span>
-                </a>
+                  <CopyButton text={EMAIL} />
+                </dd>
+              </div>
+
+              {socials.map((s) => (
+                <div
+                  key={s.name}
+                  className="group flex items-baseline justify-between py-6 border-b border-border/40"
+                >
+                  <dt className="font-mono text-[12px] text-muted/75 tracking-wider uppercase w-24 shrink-0">
+                    {s.name}
+                  </dt>
+                  <dd>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-[13px] text-muted/90 hover:text-foreground transition-colors duration-200 group-hover:text-foreground"
+                    >
+                      {s.label}
+                      <span className="ml-2 text-muted/45 group-hover:text-accent transition-colors duration-200">
+                        →
+                      </span>
+                    </a>
+                  </dd>
+                </div>
               ))}
-            </div>
+            </dl>
           </div>
         </div>
       </FadeIn>
-    </div>
+    </PageShell>
   );
 }

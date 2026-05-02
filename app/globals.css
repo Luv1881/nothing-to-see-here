@@ -3,7 +3,7 @@
 :root {
   --background: #0a0a0b;
   --foreground: #f0f0f2;
-  --muted: #b0b0b8;
+  --muted: #c8c8d2;
   --accent: #93a0b0;
   --surface: #111118;
   --border: #1a1b24;
@@ -19,6 +19,7 @@
   --color-border: var(--border);
   --font-sans: var(--font-ibm-plex-sans);
   --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-instrument-serif);
 }
 
 html {
@@ -107,6 +108,10 @@ main {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.measure {
+  max-width: 65ch;
 }
 
 @media (prefers-reduced-motion: reduce) {
