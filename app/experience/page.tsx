@@ -1,6 +1,7 @@
 import { FadeIn } from "@/components/fade-in";
 import { PageTitle } from "@/components/page-title";
 import { PageShell } from "@/components/page-shell";
+import { CompanyLogo } from "@/components/company-logo";
 
 export const metadata = {
   title: "Experience | Luv",
@@ -12,6 +13,7 @@ const experience = [
     year: "2026",
     role: "Software Engineering Intern",
     company: "SolarWinds",
+    logo: "/logos/solarwinds.png",
     period: "2026 — Present",
     location: "On-site",
     description:
@@ -22,6 +24,7 @@ const experience = [
     year: "2025",
     role: "Intern, Founder's Office",
     company: "Datawise",
+    logo: "/logos/datawise.png",
     period: "May 2025 — Jul 2025",
     location: "Remote",
     description:
@@ -32,6 +35,7 @@ const experience = [
     year: "2024",
     role: "AWS System Operations Intern",
     company: "Tech Mahindra",
+    logo: "/logos/techmahindra.png",
     period: "May 2024 — Jul 2024",
     location: "Remote",
     description:
@@ -63,9 +67,10 @@ export default function Experience() {
                 <h2 className="text-base lg:text-lg font-medium tracking-[-0.02em] text-foreground leading-snug">
                   {job.role}
                 </h2>
-                <p className="font-mono text-[13px] text-muted/75 tracking-wider mt-1">
+                <p className="font-mono text-[13px] text-muted/75 tracking-wider mt-1 flex items-center gap-1.5">
+                  <CompanyLogo src={job.logo} alt={job.company} size={14} />
                   {job.company}
-                  <span className="text-border mx-1.5">/</span>
+                  <span className="text-border mx-0.5">/</span>
                   {job.location}
                 </p>
               </div>
@@ -89,9 +94,10 @@ export default function Experience() {
               <h2 className="text-lg font-medium tracking-[-0.02em] text-foreground mb-1">
                 {job.role}
               </h2>
-              <p className="font-mono text-[12px] text-muted/75 tracking-wider mb-4">
+              <p className="font-mono text-[12px] text-muted/75 tracking-wider mb-4 flex items-center gap-1.5">
+                <CompanyLogo src={job.logo} alt={job.company} size={13} />
                 {job.company}
-                <span className="text-border mx-2">/</span>
+                <span className="text-border mx-1">/</span>
                 {job.location}
               </p>
               <p className="text-muted font-normal leading-relaxed text-[16px] mb-4">

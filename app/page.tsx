@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FadeIn } from "../components/fade-in";
 import { TitleRotator } from "../components/title-rotator";
 import { StatusPanel } from "../components/status-panel";
@@ -41,25 +40,6 @@ export default function Home() {
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.4}>
-              <nav aria-label="Quick links" className="flex items-center gap-8 mt-14 font-mono text-[13px]">
-                {[
-                  { href: "/projects", label: "projects" },
-                  { href: "/experience", label: "experience" },
-                  { href: "/writing", label: "writing" },
-                  { href: "/about", label: "about" },
-                ].map(({ href, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="group relative text-muted/90 hover:text-foreground transition-colors duration-300"
-                  >
-                    {label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-accent group-hover:w-full transition-all duration-300" />
-                  </Link>
-                ))}
-              </nav>
-            </FadeIn>
           </div>
 
           <FadeIn delay={0.5} className="hidden lg:block lg:col-span-4 lg:col-start-9">
