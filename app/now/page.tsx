@@ -4,7 +4,7 @@ import { PageShell } from "@/components/page-shell";
 import { nowData } from "@/lib/now";
 
 export const metadata = {
-  title: "Now | Luv",
+  title: "Now",
   description: "What I am currently up to.",
 };
 

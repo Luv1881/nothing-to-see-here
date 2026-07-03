@@ -18,7 +18,7 @@ const COMMANDS: Record<
   blog: { description: "open writing page", action: "navigate", target: "/writing" },
   contact: { description: "get in touch", action: "navigate", target: "/contact" },
   now: { description: "what I'm up to", action: "navigate", target: "/now" },
-  resume: { description: "download resume", action: "text", target: "resume not uploaded yet. persistence is a virtue." },
+  resume: { description: "download resume", action: "open", target: "/resume.pdf" },
   github: { description: "open github profile", action: "open", target: "https://github.com/Luv1881" },
   whoami: {
     description: "who am I?",
@@ -27,6 +27,18 @@ const COMMANDS: Record<
       "luv gupta. software engineer. builds systems that run quietly and break loudly — preferably only in staging. interested in security, automation, and the occasional existential question about why the build passed locally.",
   },
   coffee: { description: "you've earned it", action: "text", target: "coffee" },
+};
+
+// Undocumented commands ("// not everything is listed"). Module-scoped like
+// COMMANDS so the table isn't rebuilt on every submitted command.
+const HIDDEN_COMMANDS: Record<string, string> = {
+  vim: "E37: no write since last change. you live here now. (:q! works on editors, not portfolios)",
+  ls: "about/  projects/  experience/  writing/  now/  contact/  secrets/",
+  "cat secrets": "cat: secrets/: permission denied. nice try though.",
+  "cd secrets": "cd: secrets/: permission denied. it's called secrets for a reason.",
+  "rm -rf /": "absolutely not. this portfolio took weeks.",
+  pwd: "~/somewhere/over/the/vpn",
+  exit: "there is no exit. only ⌘k.",
 };
 
 function CoffeeOutput() {
@@ -49,6 +61,8 @@ export function Terminal() {
   const [history, setHistory] = useState<readonly CommandEntry[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,6 +76,25 @@ export function Terminal() {
         setIsOpen(true);
       } else if (e.key === "Escape" && isOpen) {
         setIsOpen(false);
+      } else if (e.key === "Tab" && isOpen && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          "input, button, a[href]"
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!dialogRef.current.contains(document.activeElement)) {
+          // Focus escaped the dialog (e.g. programmatic focus elsewhere) —
+          // pull it back in instead of letting Tab walk the page behind.
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
 
@@ -70,7 +103,12 @@ export function Terminal() {
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) inputRef.current?.focus();
+    if (isOpen) {
+      triggerRef.current = document.activeElement;
+      inputRef.current?.focus();
+    } else if (triggerRef.current instanceof HTMLElement) {
+      triggerRef.current.focus();
+    }
   }, [isOpen]);
 
   useEffect(() => {
@@ -90,6 +128,17 @@ export function Terminal() {
 
       if (trimmed === "clear") {
         setHistory([]);
+        return;
+      }
+
+      if (trimmed in HIDDEN_COMMANDS) {
+        setHistory((prev) => [
+          ...prev,
+          {
+            command: cmd,
+            output: <span className="text-muted/50">{HIDDEN_COMMANDS[trimmed]}</span>,
+          },
+        ]);
         return;
       }
 
@@ -135,6 +184,7 @@ export function Terminal() {
               <span className="text-accent/80 w-28">help</span>
               <span>show this message</span>
             </div>
+            <div className="mt-2 text-muted/40">{"// "}not everything is listed.</div>
           </div>
         );
       } else if (trimmed in COMMANDS) {
@@ -174,6 +224,10 @@ export function Terminal() {
       onClick={() => setIsOpen(false)}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Terminal"
         className="w-full max-w-xl bg-[#0a0a0b] border border-border rounded-xl shadow-2xl shadow-black/40 overflow-hidden font-mono text-[13px] flex flex-col max-h-[65vh]"
         onClick={(e) => e.stopPropagation()}
       >

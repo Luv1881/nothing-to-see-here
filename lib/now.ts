@@ -13,6 +13,6 @@ export const nowData = {
   reading: [
     "Designing Data-Intensive Applications — Kleppmann (still on chapter 5, no spoilers)",
     "Various papers on distributed systems fault tolerance, for fun apparently",
-    "The Art of Intrusion — Kevin Mitnick (bedtime reading, wife very concerned)",
+    "The Art of Intrusion — Kevin Mitnick (bedtime reading, family very concerned)",
   ],
 };

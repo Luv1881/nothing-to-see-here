@@ -1,25 +1,31 @@
 import { FadeIn } from "@/components/fade-in";
+import { githubUrl, linkedinUrl } from "@/lib/site";
 import { PageTitle } from "@/components/page-title";
 import { PageShell } from "@/components/page-shell";
 import { CopyButton } from "@/components/copy-button";
 
 export const metadata = {
-  title: "Contact | Luv",
+  title: "Contact",
   description: "How to reach me.",
 };
 
-const EMAIL = "chatgptvandl@gmail.com";
+const EMAIL = "luvgupta1805@gmail.com";
 
 const socials = [
   {
     name: "GitHub",
-    url: "https://github.com/Luv1881",
+    url: githubUrl,
     label: "github.com/Luv1881",
   },
   {
     name: "LinkedIn",
-    url: "https://linkedin.com/in/luv-gupta-b73491261",
+    url: linkedinUrl,
     label: "linkedin.com/in/luv-gupta",
+  },
+  {
+    name: "Resume",
+    url: "/resume.pdf",
+    label: "resume.pdf",
   },
 ];
 

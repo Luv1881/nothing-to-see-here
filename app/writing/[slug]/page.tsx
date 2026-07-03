@@ -1,5 +1,6 @@
 import { getPostBySlug, getAllPosts } from "@/lib/mdx";
 import { FadeIn } from "@/components/fade-in";
+import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-shell";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
@@ -21,8 +22,15 @@ export async function generateMetadata({
   try {
     const { meta } = getPostBySlug(slug);
     return {
-      title: `${meta.title} | Luv`,
+      title: meta.title,
       description: meta.preview,
+      openGraph: {
+        title: meta.title,
+        description: meta.preview,
+        type: "article",
+        publishedTime: new Date(meta.date).toISOString(),
+        tags: meta.tags,
+      },
     };
   } catch {
     return { title: "Post Not Found" };
@@ -62,10 +70,24 @@ export default async function Post({
     month: "short",
     day: "numeric",
   });
-  const githubContentUrl = `https://github.com/Luv1881/maybe-final-portfolio/blob/main/content/blog/${slug}.mdx`;
+  const githubContentUrl = `https://github.com/Luv1881/nothing-to-see-here/blob/main/content/blog/${slug}.mdx`;
+
+  const blogPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: meta.title,
+    description: meta.preview,
+    datePublished: isoDate,
+    author: {
+      "@type": "Person",
+      name: "Luv Gupta",
+    },
+    keywords: meta.tags?.join(", "),
+  };
 
   return (
     <PageShell>
+      <JsonLd data={blogPostingJsonLd} />
       <FadeIn>
         {/* Desktop: sidebar + article layout */}
         <div className="hidden lg:grid grid-cols-12 gap-x-12">

@@ -1,3 +1,4 @@
+import { siteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import { Nav } from "../components/nav";
@@ -8,7 +9,7 @@ import "./globals.css";
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -25,15 +26,18 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
-  title: "Luv | Software Engineer",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Luv | Software Engineer",
+    template: "%s | Luv",
+  },
   description:
     "Software Engineer exploring systems, security, and automation.",
   openGraph: {
     title: "Luv | Software Engineer",
     description:
       "Software Engineer exploring systems, security, and automation.",
-    url: "https://example.com",
+    url: siteUrl,
     siteName: "Luv",
     locale: "en_US",
     type: "website",

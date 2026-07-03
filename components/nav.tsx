@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navItems = [
+  { path: "/about", name: "about" },
   { path: "/projects", name: "projects" },
   { path: "/experience", name: "experience" },
   { path: "/writing", name: "writing" },
   { path: "/now", name: "now" },
+  { path: "/contact", name: "contact" },
 ];
 
 export function Nav() {

@@ -3,7 +3,7 @@ import { PageTitle } from "@/components/page-title";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata = {
-  title: "About | Luv",
+  title: "About",
   description: "About Luv, software engineer and builder.",
 };
 
@@ -32,14 +32,13 @@ export default function About() {
             <p>
               I believe that good engineering is quiet. The best systems run in
               the background without drawing attention to themselves. They are
-              observable, maintainable, and built to last. The noisy ones are
-              just more expensive to debug at 2am.
+              observable, maintainable, and built to last.
             </p>
 
             <p>
               When I&apos;m not writing code, I&apos;m usually reading technical
               deep-dives, exploring new paradigms in Rust, or stepping away
-              from the screen entirely. Mostly the first one.
+              from the screen entirely (mostly the first one).
             </p>
           </div>
         </div>
@@ -56,7 +55,7 @@ export default function About() {
               <p className="font-mono text-[12px] text-muted/75 tracking-wider leading-loose">
                 next.js 16<br />
                 tailwind v4<br />
-                framer motion<br />
+                css-only motion<br />
                 mdx / gray-matter
               </p>
             </div>

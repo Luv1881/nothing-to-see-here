@@ -5,7 +5,7 @@ import { getAllPosts } from "@/lib/mdx";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Writing | Luv",
+  title: "Writing",
   description: "Thoughts on engineering, systems, and design.",
 };
 
@@ -24,7 +24,7 @@ export default function Writing() {
             <article>
               <Link
                 href={`/writing/${post.slug}`}
-                className="group block py-10 border-b border-border/40"
+                className="group block py-10 border-b border-border/40 hover:border-border transition-colors duration-300"
               >
                 {/* Desktop: distributed grid */}
                 <div className="hidden md:grid grid-cols-12 gap-x-8 lg:gap-x-12 items-start">

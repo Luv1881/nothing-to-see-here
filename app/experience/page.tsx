@@ -2,47 +2,12 @@ import { FadeIn } from "@/components/fade-in";
 import { PageTitle } from "@/components/page-title";
 import { PageShell } from "@/components/page-shell";
 import { CompanyLogo } from "@/components/company-logo";
+import { experience } from "@/lib/experience";
 
 export const metadata = {
-  title: "Experience | Luv",
+  title: "Experience",
   description: "Professional experience and career journey.",
 };
-
-const experience = [
-  {
-    year: "2026",
-    role: "Software Engineering Intern",
-    company: "SolarWinds",
-    logo: "/logos/solarwinds.png",
-    period: "2026 — Present",
-    location: "On-site",
-    description:
-      "Writing automated agents to hunt down security vulnerabilities, so the on-prem security team can finally get some sleep.",
-    stack: ["Security", "Agents", "On-Prem"],
-  },
-  {
-    year: "2025",
-    role: "Intern, Founder's Office",
-    company: "Datawise",
-    logo: "/logos/datawise.png",
-    period: "May 2025 — Jul 2025",
-    location: "Remote",
-    description:
-      "Designed a highly-available on-prem network architecture from scratch, ensuring the servers stay up even if someone trips over the router cable.",
-    stack: ["HAProxy", "Proxmox", "ZFS", "Networking"],
-  },
-  {
-    year: "2024",
-    role: "AWS System Operations Intern",
-    company: "Tech Mahindra",
-    logo: "/logos/techmahindra.png",
-    period: "May 2024 — Jul 2024",
-    location: "Remote",
-    description:
-      "Automated cloud operations and optimized AWS resources, mostly to prove that manually clicking through the AWS console is a terrible idea.",
-    stack: ["AWS", "EC2", "Lambda", "CloudWatch"],
-  },
-];
 
 export default function Experience() {
   return (

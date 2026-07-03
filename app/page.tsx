@@ -1,11 +1,27 @@
+import { JsonLd } from "@/components/json-ld";
+import { githubUrl, linkedinUrl, siteUrl } from "@/lib/site";
+import Link from "next/link";
 import { FadeIn } from "../components/fade-in";
 import { TitleRotator } from "../components/title-rotator";
 import { StatusPanel } from "../components/status-panel";
 import { nowData } from "../lib/now";
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Luv Gupta",
+  jobTitle: "Software Engineer",
+  url: siteUrl,
+  sameAs: [
+    githubUrl,
+    linkedinUrl,
+  ],
+};
+
 export default function Home() {
   return (
     <div className="relative min-h-[calc(100vh-3.5rem)] flex flex-col justify-center">
+      <JsonLd data={personJsonLd} />
       <TitleRotator />
 
       <div
@@ -40,6 +56,15 @@ export default function Home() {
               </p>
             </FadeIn>
 
+            <FadeIn delay={0.4}>
+              <Link
+                href="/projects"
+                className="inline-block font-mono text-[12px] text-muted/75 tracking-wider mt-6 hover:text-accent transition-colors duration-200"
+              >
+                selected work →
+              </Link>
+            </FadeIn>
+
           </div>
 
           <FadeIn delay={0.5} className="hidden lg:block lg:col-span-4 lg:col-start-9">
@@ -49,11 +74,6 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <FadeIn delay={0.7}>
-          <div className="w-px h-8 bg-gradient-to-b from-transparent to-border/60" />
-        </FadeIn>
-      </div>
     </div>
   );
 }

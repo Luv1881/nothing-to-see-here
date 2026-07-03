@@ -1,12 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 export function CompanyLogo({ src, alt, size = 14 }: { src: string; alt: string; size?: number }) {
   const [hidden, setHidden] = useState(false);
   if (hidden) return null;
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
       width={size}
